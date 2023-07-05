@@ -5,6 +5,10 @@ export type SensorData = {
   created_at: string;
 };
 
+export type SensorDataDisplay = SensorData & {
+  ca: string;
+}
+
 export type SensorDataResponse = {
   data: SensorData[];
   count: number;
