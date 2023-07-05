@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 export default function Home() {
-  const isLocal = process.env.NEXT_PUBLIC_ENV !== "local";
+  const isLocal = process.env.NEXT_PUBLIC_ENV === "local";
   return (
     <>
       <Head>
