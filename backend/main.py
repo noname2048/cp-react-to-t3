@@ -87,3 +87,21 @@ def get_data(
 
         data = list(session.scalars(stmt))
     return {"data": data, "count": len(data)}
+
+
+@app.get("/api/v1/data", response_model=SensorDataResponse)
+def get_data_v1():
+    now: datetime = datetime.utcnow()
+    gte_time: datetime = now - timedelta(days=1)
+
+    with Session(engine) as session:
+        stmt = (
+            select(SensorData)
+            .where(SensorData.created_at >= gte_time)
+            .where(SensorData.created_at < now)
+            .order_by(SensorData.created_at)
+            .limit(5000)
+        )
+
+        data = list(session.scalars(stmt))
+    return {"data": data, "count": len(data)}
