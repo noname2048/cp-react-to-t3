@@ -3,7 +3,7 @@ import GraphTemperature from "@/components/graph-data";
 import TextTemperature from "@/components/list-data";
 import { useState, useEffect } from "react";
 import { SensorDataResponse, SensorDataFetch } from "@/types/sensor";
-import { parseISO, format, formatISO } from "date-fns";
+import { format, formatISO } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 
 export default function Supabase() {

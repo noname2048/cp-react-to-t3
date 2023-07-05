@@ -6,8 +6,8 @@ import { createClient } from "@supabase/supabase-js";
 import { sub, formatISO } from "date-fns";
 
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
+  process.env.SUPABASE_URL as string,
+  process.env.SUPABASE_KEY as string
 );
 
 type SensorData = {
@@ -24,7 +24,7 @@ type SensorDataResponse = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SensorDataResponse>
+  res: NextApiResponse<SensorDataResponse | Object>
 ) {
   if (req.method === "GET") {
     const lte = utcToZonedTime(new Date(), "Asia/Seoul");
@@ -40,6 +40,6 @@ export default async function handler(
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ data });
   } else {
-    res.status(405).send("Method Not Allowed");
+    res.status(405).send({ message: "Method Not Allowed" });
   }
 }
