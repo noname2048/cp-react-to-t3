@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 export default function Home() {
+  const isLocal = process.env.NEXT_PUBLIC_ENV !== "local";
   return (
     <>
       <Head>
@@ -12,11 +13,13 @@ export default function Home() {
           Iot Temperature
         </h1>
         <div className="flex gap-5 justify-center items-center">
-          <Link href="/brute">
-            <button className="w-36 h-20 rounded-2xl hover:bg-orange-300 bg-orange-400">
-              brute
-            </button>
-          </Link>
+          {isLocal && (
+            <Link href="/brute">
+              <button className="w-36 h-20 rounded-2xl hover:bg-orange-300 bg-orange-400">
+                brute
+              </button>
+            </Link>
+          )}
           <Link href="/supabase">
             <button className="w-36 h-20 rounded-2xl hover:bg-orange-300 bg-slate-400">
               supabase
