@@ -9,8 +9,8 @@ export default function DisplayBox({
   hum?: number;
 }) {
   return (
-    <div className="h-full w-full flex">
-      <div className="flex-grow flex flex-col justify-center items-center  bg-sky-300 m-10 rounded-2xl">
+    <div className="h-full w-full flex justify-center items-center p-20">
+      <div className="flex-grow aspect-square flex flex-col justify-center items-center  bg-sky-300 rounded-2xl">
         <div className="flex-grow flex justify-center items-center text-white text-2xl font-extrabold">
           {format(new Date(), "MM/dd HH:mm:ss")}
         </div>
