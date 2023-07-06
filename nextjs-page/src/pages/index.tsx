@@ -25,6 +25,11 @@ export default function Home() {
               supabase
             </button>
           </Link>
+          <Link href="/grid-display">
+            <button className="w-36 h-20 rounded-2xl hover:bg-orange-200 bg-orange-100">
+              grid-display
+            </button>
+          </Link>
         </div>
       </main>
     </>
