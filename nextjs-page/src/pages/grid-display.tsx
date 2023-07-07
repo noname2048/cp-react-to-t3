@@ -22,7 +22,7 @@ export default function GridDisplay() {
         <TextTemperature array={array} />
       </div>
       <div className="bg-green-50 row-span-1 col-span-1 flex justify-center items-center">
-        <DisplayBox />
+        <DisplayBox array={array} />
       </div>
     </div>
   );
