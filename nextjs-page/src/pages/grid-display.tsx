@@ -1,7 +1,7 @@
 import DisplayBox from "@/components/display-box";
-import TextTemperature from "@/components/list-data";
 import GraphTemperature from "@/components/graph-data";
 import { useApi } from "@/utils/use-api";
+import FlexData from "@/components/flex-data";
 
 export default function GridDisplay() {
   const { data, isLoading, isError } = useApi();
@@ -19,7 +19,7 @@ export default function GridDisplay() {
         <GraphTemperature array={array} />
       </div>
       <div className="bg-blue-50 row-span-1 col-span-2 flex justify-center items-center">
-        <TextTemperature array={array} />
+        <FlexData array={array} />
       </div>
       <div className="bg-green-50 row-span-1 col-span-1 flex justify-center items-center">
         <DisplayBox array={array} />
