@@ -1,7 +1,9 @@
 from datetime import date, datetime, timedelta
+from typing import Annotated
 
 import arrow
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
+from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, BaseSettings, PostgresDsn
@@ -105,3 +107,27 @@ def get_data_v1():
 
         data = list(session.scalars(stmt))
     return {"data": data, "count": len(data)}
+
+
+@app.get("/api/v1/data/update", response_model=SensorDataResponse)
+def get_any_update(last_created_at: datetime):
+    data = get_any_update_service(last_created_at=last_created_at, now=None)
+    return data
+
+
+def get_any_update_service(
+    last_created_at: datetime,
+    now: datetime | None = None,
+):
+    now = now or datetime.utcnow()
+    if last_created_at > now:
+        raise HTTPException(400, "last_created_at is wrong")
+    stmt = (
+        select(SensorData)
+        .where(SensorData.created_at >= last_created_at)
+        .order_by(SensorData.created_at)
+        .limit(2000)
+    )
+    with Session(engine) as session:
+        data = list(session.scalars(stmt))
+    return data
