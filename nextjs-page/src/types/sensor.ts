@@ -7,9 +7,14 @@ export type SensorData = {
 
 export type SensorDataDisplay = SensorData & {
   ca: string;
-}
+};
 
 export type SensorDataResponse = {
   data: SensorData[];
+  count: number;
+};
+
+export type SensorDataFetch = {
+  data: SensorDataDisplay[];
   count: number;
 };
