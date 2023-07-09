@@ -10,6 +10,9 @@ export default async function handler(
   res: NextApiResponse<SensorDataResponse | Object>
 ) {
   if (req.method === "GET") {
+    const { limit = "5000" } = req.query;
+    const parsedLimit = parseInt(limit as string);
+
     const lte = utcToZonedTime(new Date(2023, 6, 23), "Asia/Seoul");
     const gte = utcToZonedTime(sub(new Date(), { days: 1 }), "Asia/Seoul");
 
@@ -18,7 +21,8 @@ export default async function handler(
       .select("*")
       .lte("created_at", formatISO(lte))
       .gte("created_at", formatISO(gte))
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(parsedLimit);
 
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ data });
