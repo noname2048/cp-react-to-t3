@@ -17,7 +17,7 @@ export default function DisplayBox({
     return () => clearInterval(id);
   }, []);
 
-  const now = format(utcToZonedTime(time, "Asia/Seoul"), "MM-dd HH:mm:ss");
+  const now = format(utcToZonedTime(time, "Asia/Seoul"), "MM/dd HH:mm:ss");
   const last = array.at(-1);
   let temperature = "no data";
   let humidity = "no data";
