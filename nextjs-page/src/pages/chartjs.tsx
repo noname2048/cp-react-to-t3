@@ -24,9 +24,6 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
-  animations: {
-    duration: 0,
-  },
   interaction: {
     mode: "x" as const,
     intersect: false,
