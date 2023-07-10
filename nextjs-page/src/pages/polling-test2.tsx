@@ -8,7 +8,7 @@ import { format } from "date-fns";
 export default function PollingTest2() {
   const [fixedDate, setFixedDate] = useState(new Date(2023, 1, 1, 0, 0, 0));
   const [date, setDate] = useState(new Date(2023, 1, 1, 0, 0, 0));
-  const ref = useRef();
+  const ref = useRef<NodeJS.Timer | null>(null);
 
   console.log("render");
   useEffect(() => {
