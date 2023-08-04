@@ -1,37 +1,97 @@
-import Head from "next/head";
+import SensorCard from "@/components/sensor-card";
+import { baseUrl, baseWsUrl } from "@/config";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
-export default function Home() {
-  const isLocal = process.env.NEXT_PUBLIC_ENV === "local";
+type SensorWithLast = {
+  uuid: string;
+  name?: string;
+  alias?: string;
+  created_at: string;
+  updated_at: string;
+  is_active: boolean;
+  temperature?: number;
+  humidity?: number;
+  last?: string;
+};
+
+type RealtimeData = {
+  id: number;
+  uuid: string;
+  temperature: number;
+  humidity: number;
+  created_at: string;
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res = await fetch(`${baseUrl}/api/sensors/last`);
+  const sensors: SensorWithLast[] = await res.json();
+  return { props: { sensors } };
+};
+
+type Props = {
+  sensors: SensorWithLast[];
+};
+
+export default function App(
+  props: Props
+): InferGetServerSidePropsType<typeof getServerSideProps> {
+  const [sensors, setSensors] = useState<SensorWithLast[]>(props.sensors);
+  const websocket = useRef<WebSocket | null>(null);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (websocket.current === null) {
+      fetchWebsocket().then();
+    }
+  }, [isConnected]);
+
+  /* websocket 을 연결합니다.
+   */
+  const fetchWebsocket = async () => {
+    const ws = new WebSocket(`${baseWsUrl}/ws/broadcast`);
+    ws.onopen = () => {
+      console.log("websocket connected");
+      websocket.current = ws;
+      setIsConnected(true);
+    };
+    ws.onclose = () => {
+      console.log("websocket disconnected");
+      websocket.current = null;
+      setIsConnected(false);
+    };
+    ws.onmessage = (event) => {
+      const resData: RealtimeData = JSON.parse(event.data);
+      setSensors((prev) => {
+        return prev.map((sensor: SensorWithLast) => {
+          if (sensor.uuid === resData.uuid) {
+            console.log("update sensor", sensor.uuid, resData.temperature);
+            return {
+              ...sensor,
+              temperature: resData.temperature,
+              humidity: resData.humidity,
+              last: resData.created_at,
+            };
+          } else return sensor;
+        });
+      });
+    };
+  };
+
   return (
     <>
-      <Head>
-        <title>Temperature of home</title>
-      </Head>
-      <main className="min-w-fit min-h-screen flex flex-col justify-center items-center gap-10">
-        <h1 className="w-96 h-96 flex justify-center items-center text-5xl bg-teal-100 rounded-3xl">
-          Iot Temperature
-        </h1>
-        <div className="flex gap-5 justify-center items-center">
-          {isLocal && (
-            <Link href="/brute">
-              <button className="w-36 h-20 rounded-2xl hover:bg-orange-300 bg-orange-400">
-                brute
-              </button>
-            </Link>
-          )}
-          <Link href="/supabase">
-            <button className="w-36 h-20 rounded-2xl hover:bg-orange-300 bg-slate-400">
-              supabase
-            </button>
-          </Link>
-          <Link href="/grid-display">
-            <button className="w-36 h-20 rounded-2xl hover:bg-orange-200 bg-orange-100">
-              grid-display
-            </button>
-          </Link>
-        </div>
-      </main>
+      <div className="m-4 flex flex-row flex-wrap gap-8">
+        {sensors.map((sensor) => {
+          if (sensor.last)
+            return (
+              <Link key={sensor.uuid} href={`/sensors/${sensor.uuid}`}>
+                <SensorCard sensor={sensor} />
+              </Link>
+            );
+          else return <SensorCard key={sensor.uuid} sensor={sensor} />;
+        })}
+      </div>
     </>
   );
 }
