@@ -15,3 +15,5 @@ type SensorRecord = {
 };
 
 type SensorRecordList = SensorRecord[];
+
+export type { Sensor, SensorRecord, SensorRecordList };
