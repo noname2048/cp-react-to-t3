@@ -1,8 +1,8 @@
 import {
+  differenceInSeconds,
   format,
   formatDistance,
   parseISO,
-  differenceInSeconds,
 } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import { ko } from "date-fns/locale";
@@ -34,7 +34,7 @@ const iso2kstIso = (iso: string) => {
 
 const iso2kstDuration = (now: Date, iso: string) => {
   const utcDate = parseISO(iso);
-  return formatDistance(now, utcDate, { locale: ko });
+  return formatDistance(now, utcDate, { locale: ko, includeSeconds: true });
 };
 
 const isWithinTenSeconds = (now: Date, iso: string) => {
