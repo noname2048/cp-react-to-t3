@@ -9,7 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import { getTemperatureDomain } from "@/utils/get-temperature-domain";
-import { parseISO, format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 const iso2kst = (iso: string) => {
   const utcDate = parseISO(iso);
@@ -26,7 +26,7 @@ export default function GraphTemperature({
 }: {
   array: SensorDataDisplay[];
 }) {
-  if (!array)
+  if (array.length === 0)
     return (
       <div className="flex flex-col items-center w-[800px] h-[600px]">
         No Data
@@ -34,7 +34,7 @@ export default function GraphTemperature({
     );
   const { temp_domain_min, temp_domain_max } = getTemperatureDomain(array);
   const proceesedArray = array
-    .map((item, index) => {
+    .map((item) => {
       return {
         ...item,
         humunize: iso2kst(item.created_at),

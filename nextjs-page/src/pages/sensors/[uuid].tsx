@@ -1,10 +1,12 @@
+import DurationSelector from "@/components/sensor-button/duration-selector";
+import SmallSelector from "@/components/sensor-button/small-selector";
 import { baseUrl } from "@/config";
 import { SensorDataDisplay } from "@/types/sensor";
 import { parseISO } from "date-fns";
 import { useRouter } from "next/router";
 import type { Sensor } from "@/schemas";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import GraphTemperature from "@/components/graph-data";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -44,20 +46,38 @@ export default function SensorRetrievePage({
   const uuid = router.query.uuid;
 
   const [records, setRecords] = useState<SensorDataDisplay[]>([]);
-  const fetchRecords = async () => {
-    const res = await fetch(`${baseUrl}/api/sensor_records?uuid=${uuid}`);
-    const resData = await res.json();
-    setRecords(resData);
-  };
+  const [durationHours, setDurationHours] = useState<number>(24);
+  const [intervalMinutes, setIntervalMinutes] = useState<number>(10);
+
+  const onFetch = useCallback(async () => {
+    const params = new URLSearchParams({
+      uuid: uuid as string,
+      duration_hours: `${durationHours}`,
+      interval_minutes: `${intervalMinutes}`,
+    });
+    const res = await fetch(`${baseUrl}/api/sensor_records/query?` + params);
+    if (res.status < 400) {
+      const resData = await res.json();
+      setRecords(resData);
+    }
+  }, [uuid, durationHours, intervalMinutes]);
+
   const isInitialized = useRef<boolean>(false);
+  const isFeteched = useRef<boolean>(false);
   const lastRecord: SensorDataDisplay | null = getLast(records);
 
   useEffect(() => {
     if (!isInitialized.current) {
       isInitialized.current = true;
-      fetchRecords().then();
+      onFetch().then(() => (isFeteched.current = true));
     }
-  });
+  }, [onFetch]);
+
+  useEffect(() => {
+    if (isFeteched.current) {
+      onFetch().then();
+    }
+  }, [durationHours, intervalMinutes, onFetch]);
 
   if (notFound) return <div>sensor not found</div>;
   return (
@@ -74,9 +94,15 @@ export default function SensorRetrievePage({
           <p className="pt-4 p-3">습도: {lastRecord?.humidity}</p>
         </div>
       </div>
-      <GraphTemperature
-        array={records.filter((record, index) => index % 20 === 0)}
-      />
+      <GraphTemperature array={records} />
+      <div className="flex flex-row justify-between w-[700px] mt-8">
+        <DurationSelector value={durationHours} onClick={setDurationHours} />
+        <SmallSelector
+          value={intervalMinutes}
+          onClick={setIntervalMinutes}
+          selectable={[1, 2, 3, 5, 10, 20]}
+        />
+      </div>
     </div>
   );
 }
