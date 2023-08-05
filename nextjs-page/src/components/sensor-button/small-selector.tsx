@@ -2,10 +2,11 @@ type Props = {
   value: number;
   onClick: Function;
   selectable: number[];
+  suffix?: string;
 };
 
 export default function SmallSelector(props: Props) {
-  const { value, onClick, selectable } = props;
+  const { value, onClick, selectable, suffix } = props;
 
   return (
     <div className={classNameForContainer}>
@@ -20,6 +21,7 @@ export default function SmallSelector(props: Props) {
           }
         >
           {item}
+          {suffix}
         </div>
       ))}
     </div>

@@ -101,6 +101,7 @@ export default function SensorRetrievePage({
           value={intervalMinutes}
           onClick={setIntervalMinutes}
           selectable={[1, 2, 3, 5, 10, 20]}
+          suffix="m"
         />
       </div>
     </div>
