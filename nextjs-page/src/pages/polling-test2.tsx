@@ -2,8 +2,8 @@
 // 매 5초 (00, 05, 10 ...)마다 업데이트를 실행함
 // (본래 목적은 매분 05 마다 업데이트 실행, 01:05, 02:05, 03:05 ...)
 
-import React, { useState, useEffect, useRef } from "react";
-import { format } from "date-fns";
+import {format} from "date-fns";
+import React, {useEffect, useRef, useState} from "react";
 
 export default function PollingTest2() {
   const [fixedDate, setFixedDate] = useState(new Date(2023, 1, 1, 0, 0, 0));

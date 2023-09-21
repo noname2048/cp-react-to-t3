@@ -1,8 +1,7 @@
-import { format } from "date-fns";
-import { parseISO } from "date-fns";
-import type { SensorDataDisplay } from "@/types/sensor";
-import { utcToZonedTime } from "date-fns-tz";
-import { useState, useEffect } from "react";
+import type {SensorDataDisplay} from "@/types/sensor";
+import {format, parseISO} from "date-fns";
+import {utcToZonedTime} from "date-fns-tz";
+import {useEffect, useState} from "react";
 
 export default function DisplayBox({
   array = [],

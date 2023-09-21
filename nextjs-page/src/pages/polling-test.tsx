@@ -1,8 +1,8 @@
 // restrict 모드에서 각각의 console.log 는 어떻게 출력되는가?
 // 온도의 실시간 업데이트를 cron polling 으로 해결하기 위한 심플버전 이해
 
-import React, { useState, useEffect } from "react";
-import { format } from "date-fns";
+import {format} from "date-fns";
+import React, {useEffect, useState} from "react";
 
 export default function PollingTest() {
   const [fixedDate, setFixedDate] = useState(new Date(2023, 1, 1, 0, 0, 0));

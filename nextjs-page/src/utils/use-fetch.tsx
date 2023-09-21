@@ -1,7 +1,7 @@
-import { SensorDataResponse, SensorDataFetch } from "@/types/sensor";
-import { useState, useEffect } from "react";
-import { parseISO, format, formatISO } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
+import {SensorDataFetch, SensorDataResponse} from "@/types/sensor";
+import {format, formatISO, parseISO} from "date-fns";
+import {utcToZonedTime} from "date-fns-tz";
+import {useEffect, useState} from "react";
 
 export function useFetch() {
   const [data, setData] = useState<SensorDataFetch | null>(null);

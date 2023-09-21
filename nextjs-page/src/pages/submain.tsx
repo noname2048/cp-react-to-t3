@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import {useState} from "react";
 
 export default function SubMain() {
   const [sensors, setSensors] = useState([]);

@@ -1,10 +1,10 @@
-import Head from "next/head";
 import GraphTemperature from "@/components/graph-data";
 import TextTemperature from "@/components/list-data";
-import { useState, useEffect } from "react";
-import { SensorDataResponse, SensorDataFetch } from "@/types/sensor";
-import { format, formatISO } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
+import {SensorDataFetch, SensorDataResponse} from "@/types/sensor";
+import {format, formatISO} from "date-fns";
+import {utcToZonedTime} from "date-fns-tz";
+import Head from "next/head";
+import {useEffect, useState} from "react";
 
 export default function Supabase() {
   const { data, isLoading, isError } = useFetch();
